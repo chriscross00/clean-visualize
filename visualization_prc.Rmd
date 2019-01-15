@@ -1,0 +1,120 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+```{r}
+st <- storms
+
+head(st)
+summary(st)
+```
+
+Getting the number of storms recorded and how many of each status type there are.
+```{r}
+st$name %>%
+    unique() %>%
+    length()
+
+count(st, status)
+```
+
+This is which storms turn into a hurricane. I'm not sure how to do this with 1 pipe, so I just used 2. 
+```{r}
+hu <- st %>%
+    filter(status == 'hurricane')
+
+hu_names <- hu$name %>% 
+    unique()
+cat('There are:', length(hu_names), 'hurricanes.')
+```
+
+
+```{r}
+ggplot(st, aes(lat, long, color=status)) +
+    geom_point()
+```
+
+```{r}
+ggplot(st, aes(lat, long, color = year)) +
+    geom_line()
+```
+
+
+```{r}
+cw <- ChickWeight
+
+cw <- as.tibble(cw) %>%
+    rename(Weight = weight)
+```
+
+Question: Find the number of Chick in each Diet
+```{r}
+#Count by itself does not work because each Chick has multiple rows. Instead we must filter out the 
+count(cw, Diet)
+
+a <- cw %>%
+    select(Chick, Diet)
+
+b <- a[!duplicated(a$Chick),]
+
+count(b, Diet)
+```
+More concise way of doing it.
+```{r}
+t <- cw %>% distinct(Chick, Diet) %>% count(Diet)
+t
+
+```
+
+
+```{r}
+ggplot(cw, aes(Time, Weight, color=Diet)) +
+    geom_point()
+```
+
+```{r}
+ggplot(cw, aes(Diet, Weight)) +
+    geom_boxplot() +
+    geom_jitter(aes(color=Diet), width=0.5)
+```
+
+```{r}
+ggplot(cw, aes(Weight, fill=Diet)) +
+    geom_histogram(position='stack', binwidth=20)
+```
+
+```{r}
+ggplot(cw, aes(Weight, fill=Diet)) +
+    geom_density(alpha=0.40)
+```
+
+
+Stuff to do. 
+1) Create a linear model for each of the diets.
+2) Run ANOVA on each of them
+3) Find visualizes I can create based on time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
