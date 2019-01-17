@@ -124,6 +124,7 @@ ggplot(nt, aes(Diet, adj.r.squared)) +
 ```
 Need to figure out how to graph nested dataframes. Just unnest?
 https://stackoverflow.com/questions/47482288/how-to-use-purrrpmap-to-plot-multiple-ggplot-in-nested-data-frame
+https://rstudio-pubs-static.s3.amazonaws.com/31907_99e9f2fba28441d5a208587d656592d2.html
 ```{r}
 ggplot(nt, aes(data[[1]]$Time, data[[1]]$Weight)) +
     geom_point()
