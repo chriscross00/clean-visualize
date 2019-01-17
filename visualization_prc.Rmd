@@ -5,6 +5,8 @@ output: html_notebook
 
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
+library(broom)
+library(glmnet)
 ```
 
 ```{r}
@@ -68,7 +70,6 @@ More concise way of doing it.
 ```{r}
 t <- cw %>% distinct(Chick, Diet) %>% count(Diet)
 t
-
 ```
 
 
@@ -93,6 +94,10 @@ ggplot(cw, aes(Weight, fill=Diet)) +
     geom_density(alpha=0.40)
 ```
 
+```{r}
+cw %>%
+    head
+```
 
 Stuff to do. 
 1) Create a linear model for each of the diets.
@@ -100,7 +105,29 @@ Stuff to do.
 3) Find visualizes I can create based on time.
 
 
+1) Linear model. I would create a linear model for each diet. Predictor variable=time, Response=weight. I'll preform CV on them and just graph the model.
+I'm going to nest the rest of the data in the categorical variable of Diet. And then preform a lm on each nested dataset. I'm creating two col, model and results. I then unnest results and it shows up in the nt df.
+```{r}
+nt <- cw %>%
+    nest(-Diet) %>%
+    mutate(model = map(data, ~ lm(Weight~Time, data=.)),
+            results = map(model, glance)) %>%
+    unnest(results)
 
+nt
+```
+
+Analysis of the models.
+```{r}
+ggplot(nt, aes(Diet, adj.r.squared)) +
+    geom_bar(stat='identity')
+```
+Need to figure out how to graph nested dataframes. Just unnest?
+https://stackoverflow.com/questions/47482288/how-to-use-purrrpmap-to-plot-multiple-ggplot-in-nested-data-frame
+```{r}
+ggplot(nt, aes(data[[1]]$Time, data[[1]]$Weight)) +
+    geom_point()
+```
 
 
 
