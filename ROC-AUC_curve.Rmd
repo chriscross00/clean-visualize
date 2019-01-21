@@ -29,11 +29,60 @@ Plotting the data.
 ```{r}
 temp <- tibble(weight, obese)
 
-ggplot(temp, aes(weight, obese)) + 
+log_plot <- ggplot(temp, aes(weight, obese)) + 
     geom_point()
+log_plot
+```
+
+Creating the model.
+```{r}
+glm_fit <- glm(obese~weight, family=binomial)
+
+log_plot + geom_line(aes(weight, glm_fit$fitted.values))
 ```
 
 ```{r}
-
+par(pty = 's')
+roc_info <- roc(obese, glm_fit$fitted.values, plot=T)
 ```
+
+```{r}
+roc_df <- tibble(tpp=roc_info$sensitivities*100,
+                 fpp=(1-roc_info$specificities)*100,
+                 thresholds=roc_info$thresholds)
+
+head(roc_df)
+tail(roc_df)
+```
+
+Graphing 2 ROC curves.
+```{r}
+rf_model <- randomForest(factor(obese)~weight)
+```
+
+```{r}
+par(pty = 's')
+roc(obese, glm_fit$fitted.values, plot=T, col='#377eb8', print.auc=T)
+plot.roc(obese, rf_model$votes[,1], add=T, col='#4daf4a', print.auc=T, print.auc.y=-80)
+```
+
+```{r}
+par(pty='m')
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
