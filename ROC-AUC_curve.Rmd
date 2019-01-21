@@ -1,0 +1,39 @@
+---
+title: "ROC-AUC_curve"
+author: "Christoper Chan"
+date: "January 20, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(randomForest)
+library(pROC)
+```
+
+Creating the data.
+```{r}
+set.seed(420)
+
+n_samples <- 100
+weight <- sort(rnorm(n_samples, 172, 29))
+
+obese <- ifelse(runif(n_samples) < rank(weight)/100, 1, 0)
+```
+
+Plotting the data.
+```{r}
+temp <- tibble(weight, obese)
+
+ggplot(temp, aes(weight, obese)) + 
+    geom_point()
+```
+
+```{r}
+
+```
+
