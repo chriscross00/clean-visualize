@@ -2,7 +2,7 @@
 title: "ROC-AUC_curve"
 author: "Christoper Chan"
 date: "January 20, 2019"
-output: html_document
+output: rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
